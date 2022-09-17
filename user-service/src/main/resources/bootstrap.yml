@@ -13,7 +13,7 @@ spring:
             config:
                 group: j3mall
                 enabled: true
-                namespace: ${spring.application.name}
+                #namespace: ${spring.application.name}
                 file-extension: yaml
 
         sentinel:
