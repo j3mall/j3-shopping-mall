@@ -25,7 +25,7 @@ spring:
                 ds:
                     nacos:
                         dataId: ${spring.application.name}-flow-rules
-                        groupId: DEFAULT_GROUP
+                        groupId: j3mall
                         data‐type: json
                         rule‐type: flow
 

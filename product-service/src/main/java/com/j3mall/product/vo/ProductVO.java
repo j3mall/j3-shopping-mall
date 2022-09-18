@@ -1,7 +1,5 @@
 package com.j3mall.product.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,7 +10,6 @@ import java.time.LocalDateTime;
 public class ProductVO {
 
     @ApiModelProperty(value = "商品ID")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "发布人ID")

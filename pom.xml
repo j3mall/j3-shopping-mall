@@ -19,6 +19,7 @@
     <modules>
         <module>user-service</module>
         <module>product-service</module>
+        <module>mall-center</module>
     </modules>
 
     <properties>

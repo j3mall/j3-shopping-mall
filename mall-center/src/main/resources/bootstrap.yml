@@ -1,10 +1,10 @@
 
 server:
-    port: 8084
+    port: 8088
 
 spring:
     application:
-        name: product-service
+        name: mall-center
 
     cloud:
         nacos:

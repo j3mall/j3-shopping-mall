@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>product-service</artifactId>
+    <artifactId>mall-center</artifactId>
 
     <properties>
         <j3-framework.version>1.0.0-SNAPSHOT</j3-framework.version>
@@ -23,18 +23,16 @@
             <version>${j3-framework.version}</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>com.j3mall</groupId>
             <artifactId>framework-utils</artifactId>
             <version>${j3-framework.version}</version>
         </dependency>
-
-        <dependency>
+        <!--<dependency>
             <groupId>com.j3mall</groupId>
             <artifactId>framework-datasource</artifactId>
             <version>${j3-framework.version}</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

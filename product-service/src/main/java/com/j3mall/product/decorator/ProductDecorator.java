@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductDecorator {
     @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     public ProductVO getProductById(int id) {
         ProductVO productVO = new ProductVO();

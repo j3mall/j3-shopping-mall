@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class UserDecorator {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Cacheable(cacheNames = "micro:user", key="#id", condition = "#id ge 1", unless="#result == null")
     public UserVO queryById(int id) {
