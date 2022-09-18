@@ -1,0 +1,40 @@
+server:
+    port: 8080  # 网关运行端口
+
+spring:
+    application:
+        name: mall-gateway
+    main:
+        web-application-type: reactive
+    cloud:
+        # nacos注册中心
+        nacos:
+            discovery:
+                server-addr: localhost:8848
+
+        gateway:
+            discovery:
+                locator:
+                    enabled: true #开启以服务id去注册中心上获取转发地址
+            routes:
+                - id: user-service
+                  uri: lb://user-service
+                  filters:
+                      - StripPrefix=2
+                  predicates: #匹配规则
+                      - Path=/micro/user/**
+
+                - id: product-service
+                  uri: lb://product-service
+                  filters:
+                      - StripPrefix=2
+                  predicates: #匹配规则
+                      - Path=/micro/product/**
+
+                - id: mall-center
+                  uri: lb://mall-center
+                  filters:
+                      - StripPrefix=2
+                  predicates: #匹配规则
+                      - Path=/micro/mall/**
+
