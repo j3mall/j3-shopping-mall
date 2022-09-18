@@ -1,5 +1,6 @@
-package com.j3mall.product.vo;
+package com.j3mall.mall.vo;
 
+import com.j3mall.modules.feign.user.vo.UserVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class ProductVO {
+public class MallProductVO {
 
     @ApiModelProperty(value = "商品ID")
     private Integer id;
@@ -24,6 +25,7 @@ public class ProductVO {
     @ApiModelProperty(value = "销售价")
     private BigDecimal pdPrice;
 
-    private LocalDateTime updatedAt;
+    @ApiModelProperty(value = "发布人信息")
+    private UserVO ownerVO;
 
 }

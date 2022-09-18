@@ -1,10 +1,12 @@
 package com.j3mall.product;
 
+import com.j3mall.modules.feign.user.UserFeignService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan("com.j3mall.product.mybatis.mapper")
+@EnableFeignClients(clients = {
+        UserFeignService.class
+})
 public class ProductServiceApplication {
 
     @Value("${spring.application.name}:${server.port}")

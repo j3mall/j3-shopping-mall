@@ -1,10 +1,11 @@
 package com.j3mall.product.mybatis.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.j3mall.modules.feign.product.vo.ProductVO;
 import com.j3mall.product.mybatis.domain.Product;
 import com.j3mall.product.mybatis.mapper.ProductMapper;
 import com.j3mall.product.mybatis.service.ProductService;
-import com.j3mall.product.vo.ProductVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     public List<ProductVO> getProductsByUserId(int userId) {
-        List<Product> products =  productMapper.selectBatchIds(Collections.singleton(userId));
+        List<Product> products = productMapper.selectList(
+                new QueryWrapper<Product>().lambda().eq(Product::getOwnerId, userId));
         return products.stream().map(product -> {
             ProductVO productVO = new ProductVO();
             BeanUtils.copyProperties(product, productVO);
