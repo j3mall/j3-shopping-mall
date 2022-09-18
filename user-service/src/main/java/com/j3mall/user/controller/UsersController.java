@@ -1,5 +1,6 @@
 package com.j3mall.user.controller;
 
+import com.j3mall.j3.framework.constants.KeyConstants;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.user.decorator.UserDecorator;
 import com.j3mall.user.vo.UserVO;
@@ -18,8 +19,8 @@ public class UsersController {
 
     @GetMapping("/info")
     @ApiOperation("根据用户ID获取用户信息")
-    public JsonResult<UserVO> queryUserById(@RequestParam("id") Integer id) {
-        UserVO userVO = userDecorator.queryById(id);
+    public JsonResult<UserVO> queryUserById(@RequestParam(KeyConstants.KEY_USERID) Integer userId) {
+        UserVO userVO = userDecorator.queryById(userId);
         return JsonResult.success(userVO);
     }
 

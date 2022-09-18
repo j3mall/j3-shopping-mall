@@ -18,9 +18,9 @@ public class ProductDecorator {
 
     private final ProductFeginService productFeginService;
 
-    public MallProductVO productInfo(Integer productId) {
+    public MallProductVO productInfo(Integer userId, Integer productId) {
         MallProductVO mallProduct = new MallProductVO();
-        JsonResult<ProductVO> jsonResult = productFeginService.queryProductById(productId);
+        JsonResult<ProductVO> jsonResult = productFeginService.queryProductById(userId, productId);
         if (jsonResult.isSuccess()) {
             BeanUtils.copyProperties(jsonResult.getBody(), mallProduct);
         }

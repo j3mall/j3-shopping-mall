@@ -28,7 +28,7 @@ public class ProductDecorator {
         return productVO;
     }
 
-    public List<ProductVO> getProductsByUserId(int userId) {
+    public List<ProductVO> getProductsByUserId(Integer userId) {
         List<ProductVO> products = productService.getProductsByUserId(userId);
         List<ProductVO> productVos = products.stream().peek(productVO -> {
             productVO.setOwnerVO(userDecorator.queryUserById(userId));

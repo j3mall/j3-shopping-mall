@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -40,14 +41,19 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         String authToken = exchange.getRequest().getHeaders().getFirst(KeyConstants.KEY_J3_TOKEN);
 
         if (ObjectUtils.isEmpty(authToken)) {
-            log.warn("{} 请求头token为空, {}, {}", getName(), exchange.getRequest().getURI(), exchange.getRequest().getQueryParams());
+            log.warn(getName()+"请求头token为空, {}, {}", exchange.getRequest().getURI(), exchange.getRequest().getQueryParams());
         } else {
             String[] userRange = authToken.split("-");
-            String userId = userRange[0];
-
+            Integer userId = Integer.valueOf(userRange[0]);
+            if (userRange.length >= 2) {
+                // 随机用户模式，用于测试并发性能
+                Integer maxUserId = Integer.parseInt(userRange[1]);
+                userId += new Random().nextInt(maxUserId - userId + 1);
+                log.info(getName()+"随机用户{} -> {}", userRange, userId);
+            }
             //设置用户信息到请求，注意，这里是追加头部信息，token信息已经有了
-            reqBuilder.header(KeyConstants.KEY_J3_USERID, userId);
-            log.info("{} 添加请求头 {}, {}", getName(), reqBuilder.build().getHeaders(), exchange.getRequest().getURI());
+            reqBuilder.header(KeyConstants.KEY_J3_USERID, String.valueOf(userId));
+            log.debug(getName()+"添加请求头 {}, {}", reqBuilder.build().getHeaders(), exchange.getRequest().getURI());
         }
 
         ServerWebExchange mutableExchange = exchange.mutate().request(reqBuilder.build()).build();
