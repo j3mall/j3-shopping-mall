@@ -1,0 +1,31 @@
+
+server:
+    port: 8084
+
+spring:
+    application:
+        name: product-service
+
+    cloud:
+        nacos:
+            discovery:
+                server-addr: localhost:8848
+            config:
+                group: j3mall
+                enabled: true
+                #namespace: ${spring.application.name}
+                file-extension: yaml
+
+        sentinel:
+            transport:
+                port: 8719
+                dashboard: localhost:8858
+            enabled: true
+            datasource:
+                ds:
+                    nacos:
+                        dataId: ${spring.application.name}-flow-rules
+                        groupId: DEFAULT_GROUP
+                        data‐type: json
+                        rule‐type: flow
+
