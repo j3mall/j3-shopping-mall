@@ -19,16 +19,17 @@ public class ProductController {
     @Autowired
     private ProductDecorator productDecorator;
 
-    @GetMapping("/info")
+    @GetMapping("/{productId}")
     @ApiOperation("获取商品详情")
-    public JsonResult<ProductVO> queryProduct(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer userId, @RequestParam("productId") Integer productId) {
+    public JsonResult<ProductVO> queryProductById(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
+                                            @PathVariable("productId") Integer productId) {
         ProductVO product = productDecorator.getProductById(productId);
         return JsonResult.success(product);
     }
 
     @GetMapping("")
-    @ApiOperation("获取我的商品列表")
-    public JsonResult<List<ProductVO>> queryProducts(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer userId) {
+    @ApiOperation("获取商品列表")
+    public JsonResult<List<ProductVO>> queryProductsByUser(@RequestParam(KeyConstants.KEY_USERID) Integer userId) {
         List<ProductVO> products = productDecorator.getProductsByUserId(userId);
         return JsonResult.success(products);
     }

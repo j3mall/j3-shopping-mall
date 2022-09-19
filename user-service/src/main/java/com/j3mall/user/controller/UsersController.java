@@ -17,9 +17,9 @@ public class UsersController {
     @Autowired
     private UserDecorator userDecorator;
 
-    @GetMapping("/info")
+    @GetMapping("/{userId}")
     @ApiOperation("根据用户ID获取用户信息")
-    public JsonResult<UserVO> queryUserById(@RequestParam(KeyConstants.KEY_USERID) Integer userId) {
+    public JsonResult<UserVO> queryUserById(@PathVariable(KeyConstants.KEY_USERID) Integer userId) {
         UserVO userVO = userDecorator.queryById(userId);
         return JsonResult.success(userVO);
     }

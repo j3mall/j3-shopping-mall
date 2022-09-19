@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -23,15 +24,18 @@ public class ProductsController {
 
     @GetMapping("/{id}")
     @ApiOperation("获取商城单个商品详情")
-    public JsonResult<MallProductVO> productInfo(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer userId, @PathVariable("id") String productId) {
-        MallProductVO product = productDecorator.productInfo(userId, Integer.valueOf(productId));
+    public JsonResult<MallProductVO> productInfo(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
+                                                 @PathVariable("id") Integer productId) {
+        MallProductVO product = productDecorator.productInfo(j3UserId, productId);
         return JsonResult.success(product);
     }
 
     @GetMapping("")
-    @ApiOperation("获取商品列表")
-    public JsonResult<List<MallProductVO>> productsList(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer userId, @RequestParam("scope") String scope) {
-        List<MallProductVO> products = productDecorator.productsListByUser(userId);
+    @ApiOperation("获取用户的商品列表，默认当前用户")
+    public JsonResult<List<MallProductVO>> productsList(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
+                                                        @RequestParam(value = KeyConstants.KEY_USERID, required = false) Integer userId) {
+        Integer queryUserId = Optional.ofNullable(userId).orElse(j3UserId);
+        List<MallProductVO> products = productDecorator.productsListByUser(queryUserId);
         return JsonResult.success(products);
     }
 
