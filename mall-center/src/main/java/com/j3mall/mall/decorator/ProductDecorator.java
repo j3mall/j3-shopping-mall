@@ -1,17 +1,22 @@
 package com.j3mall.mall.decorator;
 
+import cn.hutool.core.util.ObjUtil;
+import com.alibaba.fastjson.JSON;
+import com.github.javafaker.Faker;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.mall.vo.MallProductVO;
 import com.j3mall.modules.feign.product.ProductFeginService;
 import com.j3mall.modules.feign.product.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductDecorator {
@@ -39,6 +44,32 @@ public class ProductDecorator {
             }).collect(Collectors.toList());
         }
         return mallProducts;
+    }
+
+    /**
+     * 随机发布一个商品，仅用于测试
+     */
+    public ProductVO publishRandomProduct(Integer userId, ProductVO productVO) {
+        ProductVO newProduct = randomProductVo(userId, productVO);
+
+        JsonResult<ProductVO> jsonResult = productFeginService.createProduct(userId, newProduct);
+        log.debug("用户随机发布商品{}, {}", userId, JSON.toJSONString(jsonResult.getBody()));
+        return jsonResult.getBody();
+    }
+
+    private ProductVO randomProductVo(Integer userId, ProductVO productVO) {
+        Faker faker = new Faker(new Locale("zh-CN"));
+        ProductVO newProduct = new ProductVO();
+        newProduct.setOwnerId(userId);
+
+        newProduct.setName(Optional.ofNullable(productVO.getName()).filter(ObjUtil::isNotEmpty)
+                .orElse(faker.book().title()));
+        newProduct.setStockAmount(Optional.ofNullable(productVO.getStockAmount())
+                .orElse(new Random().nextInt(5000)));
+        BigDecimal pdPrice = Optional.ofNullable(productVO.getPdPrice())
+                .orElse(BigDecimal.valueOf(new Random().nextInt(20)));
+        newProduct.setPdPrice(pdPrice);
+        return newProduct;
     }
 
 }

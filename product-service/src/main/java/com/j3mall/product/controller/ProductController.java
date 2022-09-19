@@ -4,6 +4,7 @@ import com.j3mall.j3.framework.constants.KeyConstants;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.modules.feign.product.vo.ProductVO;
 import com.j3mall.product.decorator.ProductDecorator;
+import com.j3mall.product.mybatis.domain.Product;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,14 @@ public class ProductController {
     public JsonResult<List<ProductVO>> queryProductsByUser(@RequestParam(KeyConstants.KEY_USERID) Integer userId) {
         List<ProductVO> products = productDecorator.getProductsByUserId(userId);
         return JsonResult.success(products);
+    }
+
+    @PostMapping("")
+    @ApiOperation("发布一个商品")
+    public JsonResult<Product> createProduct(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
+                                             @RequestBody ProductVO productVO) {
+        productVO.setOwnerId(j3UserId);
+        return JsonResult.success(productDecorator.createProduct(productVO));
     }
 
 }

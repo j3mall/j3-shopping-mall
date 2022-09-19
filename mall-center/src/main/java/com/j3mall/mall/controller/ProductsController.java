@@ -4,6 +4,7 @@ import com.j3mall.j3.framework.constants.KeyConstants;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.mall.decorator.ProductDecorator;
 import com.j3mall.mall.vo.MallProductVO;
+import com.j3mall.modules.feign.product.vo.ProductVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,13 @@ public class ProductsController {
         Integer queryUserId = Optional.ofNullable(userId).orElse(j3UserId);
         List<MallProductVO> products = productDecorator.productsListByUser(queryUserId);
         return JsonResult.success(products);
+    }
+
+    @PostMapping("")
+    @ApiOperation("发布一个商品(支持随机生成)")
+    public JsonResult<ProductVO> publishProduct(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
+                                                @RequestBody ProductVO productVO) {
+        return JsonResult.success(productDecorator.publishRandomProduct(j3UserId, productVO));
     }
 
 }
