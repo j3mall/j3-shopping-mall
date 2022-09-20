@@ -17,24 +17,31 @@ spring:
                 locator:
                     enabled: true #开启以服务id去注册中心上获取转发地址
             routes:
-                - id: user-service
-                  uri: lb://user-service
-                  filters:
+                -   id: user-service
+                    uri: lb://user-service
+                    filters:
                       - StripPrefix=2
-                  predicates: #匹配规则
+                    predicates: #匹配规则
                       - Path=/micro/user/**
 
-                - id: product-service
-                  uri: lb://product-service
-                  filters:
+                -   id: product-service
+                    uri: lb://product-service
+                    filters:
                       - StripPrefix=2
-                  predicates: #匹配规则
+                    predicates: #匹配规则
                       - Path=/micro/product/**
 
-                - id: mall-center
-                  uri: lb://mall-center
-                  filters:
+                -   id: order-service
+                    uri: lb://order-service
+                    filters:
+                        - StripPrefix=2
+                    predicates: #匹配规则
+                        - Path=/micro/order/**
+
+                -   id: mall-center
+                    uri: lb://mall-center
+                    filters:
                       - StripPrefix=2
-                  predicates: #匹配规则
+                    predicates: #匹配规则
                       - Path=/micro/mall/**
 

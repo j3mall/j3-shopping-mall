@@ -21,6 +21,7 @@
         <module>product-service</module>
         <module>mall-center</module>
         <module>mall-gateway</module>
+        <module>order-service</module>
     </modules>
 
     <properties>
