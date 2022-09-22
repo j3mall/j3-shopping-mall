@@ -33,7 +33,7 @@ public class ProductDecorator {
     }
 
     public List<MallProductVO> productsListByUser(Integer userId) {
-        List<MallProductVO> mallProducts = new ArrayList<>();
+        List<MallProductVO> mallProducts = null;
         JsonResult<List<ProductVO>> jsonResult = productFeginService.queryProductsByUser(userId);
 
         if (jsonResult.isSuccess()) {
@@ -44,6 +44,22 @@ public class ProductDecorator {
             }).collect(Collectors.toList());
         }
         return mallProducts;
+    }
+
+    /**
+     * 获取一个商品，或者随机发布一个
+     * @param sellerUserId
+     * @return
+     */
+    public ProductVO randomProductByUser(Integer sellerUserId) {
+        ProductVO productVO = new ProductVO();
+        List<MallProductVO> productList = productsListByUser(sellerUserId);
+        if (ObjUtil.isNotEmpty(productList)) {
+            BeanUtils.copyProperties(productList.get(0), productVO);
+        } else {
+            productVO = publishRandomProduct(sellerUserId, new ProductVO());
+        }
+        return productVO;
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.j3mall.mall;
 
+import com.j3mall.modules.feign.order.OrderFeignService;
 import com.j3mall.modules.feign.product.ProductFeginService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
  * 聚合多个微服务，对外提供接口
  */
 @RestController
-@SpringBootApplication
 @EnableDiscoveryClient
+@EnableAspectJAutoProxy
+@SpringBootApplication(scanBasePackages = {"com.j3mall.mall", "com.j3mall.annotation.log"})
 @EnableFeignClients(clients = {
-        ProductFeginService.class
+        ProductFeginService.class,
+        OrderFeignService.class
 })
 public class MallCenterApplication {
     @Value("${j3.platform}")
