@@ -6,6 +6,9 @@ spring:
         name: mall-gateway
     main:
         web-application-type: reactive
+    messages:
+        basename: i18n/message
+
     cloud:
         # nacos注册中心
         nacos:

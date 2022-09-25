@@ -1,19 +1,21 @@
 package com.j3mall.gateway.exception;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.j3mall.gateway.utils.I18nUtils;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.*;
 
-import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -25,6 +27,9 @@ import java.util.Map;
 @Slf4j
 public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
 
+    @Autowired
+    private MessageSource messageSource;
+
     private static int reqCount = 0;
     public static String getName() {
         return "网关异常" + reqCount + "th";
@@ -35,6 +40,7 @@ public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandle
                                         ErrorProperties errorProperties,
                                         ApplicationContext applicationContext) {
         super(errorAttributes, webProperties.getResources(), errorProperties, applicationContext);
+        reqCount += 1;
     }
 
     @Override
@@ -48,9 +54,8 @@ public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandle
         errorAttributes.put("requestId", request.exchange().getRequest().getId());
 
         errorAttributes.put(KeyConstants.KEY_HTTP_STATUS, getHttpStatus(errorAttributes));
-        if (error instanceof UnknownHostException) {
-            String errorMessage = StrUtil.contains(error.getMessage(), "未知的名称或服务")
-                    ? error.getMessage() : error.getMessage() + " 未知的名称或服务";
+        if (error instanceof NotFoundException) {
+            String errorMessage = messageSource.getMessage("error.msg.service_not_available", null, I18nUtils.getLocale(request));
             errorAttributes.put(KeyConstants.KEY_MESSAGE, errorMessage);
         } else {
             errorAttributes.put(KeyConstants.KEY_MESSAGE, error.getMessage());
