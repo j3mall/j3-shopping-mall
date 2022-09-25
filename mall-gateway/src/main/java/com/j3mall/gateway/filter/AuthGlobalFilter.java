@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * 自定义全局认证网关过滤器（GlobalFilter）
+ * 自定义网关全局认证过滤器（GlobalFilter）
  */
 @Component
 @Slf4j
@@ -23,7 +23,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private static int reqCount = 0;
 
     public static String getName() {
-        return "网关" + reqCount + "th";
+        return "网关认证" + reqCount + "th";
     }
 
     @Override
