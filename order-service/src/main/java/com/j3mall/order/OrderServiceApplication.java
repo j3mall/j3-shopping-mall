@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.j3mall.order", "com.j3mall.annotation.log"})
 @MapperScan("com.j3mall.order.mybatis.mapper")
 @EnableFeignClients(clients = {
         UserFeignService.class,

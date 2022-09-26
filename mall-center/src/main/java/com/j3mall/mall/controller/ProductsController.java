@@ -1,5 +1,6 @@
 package com.j3mall.mall.controller;
 
+import com.j3mall.annotation.log.LogApiRequest;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.mall.decorator.ProductDecorator;
@@ -40,6 +41,8 @@ public class ProductsController {
         return JsonResult.success(products);
     }
 
+    // 硬编码，通过注解调用日志
+    @LogApiRequest
     @PostMapping("")
     @ApiOperation("发布一个商品(支持随机生成)")
     public JsonResult<ProductVO> publishProduct(@RequestHeader(KeyConstants.KEY_J3_USERID) Integer j3UserId,
