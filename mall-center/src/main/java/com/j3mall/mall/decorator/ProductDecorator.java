@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.javafaker.Faker;
 import com.j3mall.j3.framework.utils.JsonResult;
+import com.j3mall.mall.dubbo.consumer.ProductsServiceRpc;
 import com.j3mall.mall.vo.MallProductVO;
 import com.j3mall.modules.feign.product.ProductFeginService;
 import com.j3mall.modules.feign.product.vo.ProductVO;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 public class ProductDecorator {
 
     private final ProductFeginService productFeginService;
+    // Dubbo 与 Feign 示范
+    private final ProductsServiceRpc productsServiceRpc;
 
     public MallProductVO productInfo(Integer userId, Integer productId) {
         MallProductVO mallProduct = new MallProductVO();
@@ -34,7 +37,7 @@ public class ProductDecorator {
 
     public List<MallProductVO> productsListByUser(Integer userId) {
         List<MallProductVO> mallProducts = null;
-        JsonResult<List<ProductVO>> jsonResult = productFeginService.queryProductsByUser(userId);
+        JsonResult<List<ProductVO>> jsonResult = productsServiceRpc.queryProductsByUser(userId);
 
         if (jsonResult.isSuccess()) {
             mallProducts = jsonResult.getBody().stream().map(productVO -> {

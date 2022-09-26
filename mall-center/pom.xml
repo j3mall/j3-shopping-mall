@@ -40,6 +40,12 @@
             <version>${j3-framework.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.j3mall</groupId>
+            <artifactId>framework-dubbo</artifactId>
+            <version>${j3-framework.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
