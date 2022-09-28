@@ -1,0 +1,11 @@
+
+dubbo:
+    registry:
+        address: nacos://localhost:8848
+    protocol:
+        port: 20880
+        name: dubbo
+    application:
+        name: ${spring.application.name}
+        qosEnable: true
+        qos-accept-foreign-ip: false

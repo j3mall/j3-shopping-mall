@@ -17,17 +17,14 @@ import java.util.Random;
 @Component
 @RequiredArgsConstructor
 public class OrderDecorator {
-
-    private final ProductDecorator productDecorator;
     private final OrderFeignService orderFeignService;
 
     // 随机生成订单内容，仅用于测试
     public OrderVO createRandomOrder(Integer userId, OrderVO orderVO) {
         OrderVO newOrder = new OrderVO();
-        ProductVO productVO = productDecorator.randomProductByUser(userId+1);
+        ProductVO productVO = orderVO.getProductVO();
         newOrder.setUserId(userId);
         newOrder.setProductId(productVO.getId());
-        newOrder.setProductVO(productVO);
 
         newOrder.setStatus(OrderVO.Status.UNPAID);
         newOrder.setPdAmount(new Random().nextInt(3) + 1);

@@ -2,6 +2,7 @@ package com.j3mall.mall;
 
 import com.j3mall.modules.feign.order.OrderFeignService;
 import com.j3mall.modules.feign.product.ProductFeginService;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 聚合多个微服务，对外提供接口
  */
+@EnableDubbo
 @RestController
 @EnableDiscoveryClient
 @EnableAspectJAutoProxy

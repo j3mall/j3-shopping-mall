@@ -5,6 +5,8 @@ server:
 spring:
     application:
         name: mall-center
+    main:
+        allow-bean-definition-overriding: true
 
     cloud:
         nacos:

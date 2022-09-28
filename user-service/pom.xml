@@ -6,7 +6,6 @@
 		<groupId>com.j3mall</groupId>
 		<artifactId>j3-shopping-mall</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<artifactId>user-service</artifactId>
