@@ -24,6 +24,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--这个jar放在第二个位置-->
+        <dependency>
+            <groupId>com.j3mall</groupId>
+            <artifactId>framework-cache</artifactId>
+            <version>${j3-framework.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.j3mall</groupId>
             <artifactId>framework-utils</artifactId>

@@ -1,5 +1,6 @@
 package com.j3mall.gateway;
 
+import com.j3mall.framework.cache.EnableCachePlugins;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@EnableCachePlugins(redissonSupport = false)
 @SpringBootApplication
 public class MallGatewayApplication {
 

@@ -1,10 +1,13 @@
 package com.j3mall.gateway.filter;
 
+import com.j3mall.gateway.constants.GatewayConstants;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -20,7 +23,11 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
-    private static int reqCount = 0;
+
+    @Autowired
+    private StringRedisTemplate strRedisTemplate;
+
+    private static Long reqCount = 0L;
 
     public static String getName() {
         return "网关认证" + reqCount + "th";
@@ -34,7 +41,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        reqCount += 1;
+        reqCount = strRedisTemplate.opsForValue().increment(GatewayConstants.KEY_GATEWAY_REQ_COUNT);;
         String traceId = UUID.randomUUID().toString();
         ServerHttpRequest.Builder reqBuilder = exchange.getRequest().mutate()
                 .header(KeyConstants.KEY_TRACE_ID, traceId);
