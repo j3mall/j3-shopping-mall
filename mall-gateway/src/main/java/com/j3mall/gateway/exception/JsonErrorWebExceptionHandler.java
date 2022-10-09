@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 自定义网关全局异常处理
@@ -35,9 +36,10 @@ public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandle
     @Autowired
     private MessageSource messageSource;
 
-    private static Long reqErrorCount = 0L;
+    private volatile Long reqErrorCount = 0L;
+
     public String getName() {
-        String totalReqCount = strRedisTemplate.opsForValue().get(GatewayConstants.KEY_GATEWAY_REQ_COUNT);
+        String totalReqCount = Optional.ofNullable(strRedisTemplate.opsForValue().get(GatewayConstants.KEY_GATEWAY_REQ_COUNT)).orElse("1");
         return "网关异常" + reqErrorCount + "/" + totalReqCount + "th请求";
     }
 

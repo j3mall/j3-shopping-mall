@@ -1,5 +1,6 @@
 package com.j3mall.gateway.filter;
 
+import com.j3mall.framework.cache.utils.RedisLock;
 import com.j3mall.gateway.constants.GatewayConstants;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -27,9 +29,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     @Autowired
     private StringRedisTemplate strRedisTemplate;
 
-    private static Long reqCount = 0L;
+    private Long reqCount;
 
-    public static String getName() {
+    public String getName() {
         return "网关认证" + reqCount + "th";
     }
 
@@ -41,7 +43,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        reqCount = strRedisTemplate.opsForValue().increment(GatewayConstants.KEY_GATEWAY_REQ_COUNT);;
+        increaseReqCount();
         String traceId = UUID.randomUUID().toString();
         ServerHttpRequest.Builder reqBuilder = exchange.getRequest().mutate()
                 .header(KeyConstants.KEY_TRACE_ID, traceId);
@@ -65,6 +67,27 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
         ServerWebExchange mutableExchange = exchange.mutate().request(reqBuilder.build()).build();
         return chain.filter(mutableExchange);
+    }
+
+    private Long getReqCount() {
+        return Optional.ofNullable(strRedisTemplate.opsForValue().get(GatewayConstants.KEY_GATEWAY_REQ_COUNT))
+                .map(Long::valueOf).orElse(0L);
+    }
+
+    // 分布式锁使用示范
+    private void increaseReqCount() {
+        String lockKey = GatewayConstants.KEY_GATEWAY_REQ_COUNT + ":" + (getReqCount() + 1);
+        RedisLock lock = new RedisLock(strRedisTemplate, lockKey, 1000, 2*1000);
+        try {
+            if (lock.lockWithoutWait()) {
+                reqCount = strRedisTemplate.opsForValue().increment(GatewayConstants.KEY_GATEWAY_REQ_COUNT);
+                log.debug(getName()+"获取锁成功, {}", lock.getLockKey());
+            } else {
+                log.error(getName()+"获取锁失败, currReqCount {}", reqCount);
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
 }
