@@ -1,7 +1,7 @@
 
 dubbo:
     registry:
-        address: nacos://localhost:8848
+        address: nacos://nacos:8848
     protocol:
         port: 20880
         name: dubbo
