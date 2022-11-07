@@ -5,6 +5,7 @@ import com.j3mall.gateway.constants.GatewayConstants;
 import com.j3mall.gateway.utils.I18nUtils;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -14,7 +15,6 @@ import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.*;
 
@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 自定义网关全局异常处理
@@ -31,15 +30,14 @@ import java.util.Optional;
 public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
 
     @Autowired
-    private StringRedisTemplate strRedisTemplate;
+    private RedissonClient redissonClient;
 
     @Autowired
     private MessageSource messageSource;
 
-    private volatile Long reqErrorCount = 0L;
-
     public String getName() {
-        String totalReqCount = Optional.ofNullable(strRedisTemplate.opsForValue().get(GatewayConstants.KEY_GATEWAY_REQ_COUNT)).orElse("1");
+        long totalReqCount = redissonClient.getAtomicLong(GatewayConstants.KEY_GATEWAY_REQ_COUNT).get();
+        long reqErrorCount = redissonClient.getAtomicLong(GatewayConstants.KEY_GATEWAY_REQ_ERROR_COUNT).incrementAndGet();
         return "网关异常" + reqErrorCount + "/" + totalReqCount + "th请求";
     }
 
@@ -53,7 +51,6 @@ public class JsonErrorWebExceptionHandler extends DefaultErrorWebExceptionHandle
     @Override
     protected Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         //定制化逻辑
-        reqErrorCount = strRedisTemplate.opsForValue().increment(GatewayConstants.KEY_GATEWAY_REQ_ERROR_COUNT);
         Throwable error = super.getError(request);
         Map<String, Object> errorAttributes = new LinkedHashMap<>(8);
         errorAttributes.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

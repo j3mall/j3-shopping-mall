@@ -1,21 +1,19 @@
 package com.j3mall.gateway.filter;
 
-import com.j3mall.framework.cache.utils.RedisLock;
 import com.j3mall.gateway.constants.GatewayConstants;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -27,12 +25,11 @@ import java.util.UUID;
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Autowired
-    private StringRedisTemplate strRedisTemplate;
-
-    private Long reqCount;
+    private RedissonClient redissonClient;
 
     public String getName() {
-        return "网关认证" + reqCount + "th";
+        long totalReqCount = redissonClient.getAtomicLong(GatewayConstants.KEY_GATEWAY_REQ_COUNT).incrementAndGet();
+        return "网关认证" + totalReqCount + "th";
     }
 
     @Override
@@ -43,7 +40,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        increaseReqCount();
         String traceId = UUID.randomUUID().toString();
         ServerHttpRequest.Builder reqBuilder = exchange.getRequest().mutate()
                 .header(KeyConstants.KEY_TRACE_ID, traceId);
@@ -67,27 +63,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
         ServerWebExchange mutableExchange = exchange.mutate().request(reqBuilder.build()).build();
         return chain.filter(mutableExchange);
-    }
-
-    private Long getReqCount() {
-        return Optional.ofNullable(strRedisTemplate.opsForValue().get(GatewayConstants.KEY_GATEWAY_REQ_COUNT))
-                .map(Long::valueOf).orElse(0L);
-    }
-
-    // 分布式锁使用示范
-    private void increaseReqCount() {
-        String lockKey = GatewayConstants.KEY_GATEWAY_REQ_COUNT + ":" + (getReqCount() + 1);
-        RedisLock lock = new RedisLock(strRedisTemplate, lockKey, 1000, 2*1000);
-        try {
-            if (lock.lockWithoutWait()) {
-                reqCount = strRedisTemplate.opsForValue().increment(GatewayConstants.KEY_GATEWAY_REQ_COUNT);
-                log.debug(getName()+"获取锁成功, {}", lock.getLockKey());
-            } else {
-                log.error(getName()+"获取锁失败, currReqCount {}", reqCount);
-            }
-        } finally {
-            lock.unlock();
-        }
     }
 
 }
