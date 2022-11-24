@@ -27,7 +27,7 @@ public class OrderDecorator {
     private final OrderService orderService;
 
     //private final ProductFeginService productFeginService;
-    @DubboReference
+    @DubboReference(check = false)
     private final ProductDubboService productDubboService;
 
     @Lazy

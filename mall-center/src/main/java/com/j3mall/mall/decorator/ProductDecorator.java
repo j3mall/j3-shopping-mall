@@ -1,6 +1,6 @@
 package com.j3mall.mall.decorator;
 
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.javafaker.Faker;
 import com.j3mall.dubbo.provider.ProductDubboService;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,8 +29,10 @@ public class ProductDecorator {
 
     private final ProductFeginService productFeginService;
     // Dubbo 与 Feign 示范
-    @DubboReference
+    @DubboReference(check = false)
     private ProductDubboService productDubboService;
+
+    private final Random random = new Random(System.currentTimeMillis());
 
     public MallProductVO productInfo(Integer userId, Integer productId) {
         MallProductVO mallProduct = new MallProductVO();
@@ -59,10 +62,11 @@ public class ProductDecorator {
      * @param sellerUserId
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ProductVO randomProductByUser(Integer sellerUserId) {
         ProductVO productVO = new ProductVO();
         List<MallProductVO> productList = productsListByUser(sellerUserId);
-        if (ObjUtil.isNotEmpty(productList)) {
+        if (ObjectUtil.isNotEmpty(productList)) {
             BeanUtils.copyProperties(productList.get(0), productVO);
         } else {
             productVO = publishRandomProduct(sellerUserId, new ProductVO());
@@ -86,12 +90,12 @@ public class ProductDecorator {
         ProductVO newProduct = new ProductVO();
         newProduct.setOwnerId(userId);
 
-        newProduct.setName(Optional.ofNullable(productVO.getName()).filter(ObjUtil::isNotEmpty)
+        newProduct.setName(Optional.ofNullable(productVO.getName()).filter(ObjectUtil::isNotEmpty)
                 .orElse(faker.book().title()));
         newProduct.setStockAmount(Optional.ofNullable(productVO.getStockAmount())
-                .orElse(new Random().nextInt(5000)));
+                .orElse(random.nextInt(5000)));
         BigDecimal pdPrice = Optional.ofNullable(productVO.getPdPrice())
-                .orElse(BigDecimal.valueOf(new Random().nextInt(20)));
+                .orElse(BigDecimal.valueOf(random.nextInt(20)));
         newProduct.setPdPrice(pdPrice);
         return newProduct;
     }
