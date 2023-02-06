@@ -8,7 +8,6 @@ import com.j3mall.modules.feign.product.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -22,7 +21,6 @@ public class OrderDecorator {
     private final Random random = new Random(System.currentTimeMillis());
 
     /** 随机生成订单内容，仅用于测试 **/
-    @Transactional(rollbackFor = Exception.class)
     public OrderVO createRandomOrder(Integer userId, OrderVO orderVO) {
         OrderVO newOrder = new OrderVO();
         ProductVO productVO = orderVO.getProductVO();

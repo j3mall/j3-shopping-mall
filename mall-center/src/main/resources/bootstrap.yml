@@ -15,7 +15,7 @@ spring:
             config:
                 group: j3mall
                 enabled: true
-                #namespace: ${spring.application.name}
+                server-addr: nacos:8848
                 file-extension: yaml
 
         sentinel:
