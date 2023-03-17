@@ -13,6 +13,7 @@ spring:
             config:
                 group: j3mall
                 enabled: true
+                server-addr: nacos:8848
                 #namespace: ${spring.application.name}
                 file-extension: yaml
 

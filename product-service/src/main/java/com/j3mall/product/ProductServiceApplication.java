@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableDubbo
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = {"com.j3mall.product", "com.j3mall.annotation.log"})
+@SpringBootApplication(scanBasePackages = {"com.j3mall.product", "com.j3mall.annotation"})
 @MapperScan("com.j3mall.product.mybatis.mapper")
 @EnableFeignClients(clients = {
-        UserFeignService.class
+    UserFeignService.class
 })
 public class ProductServiceApplication {
 

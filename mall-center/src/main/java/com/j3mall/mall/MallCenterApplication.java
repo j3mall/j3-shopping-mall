@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableDubbo
 @RestController
 @EnableDiscoveryClient
-@EnableAspectJAutoProxy
-@SpringBootApplication(scanBasePackages = {"com.j3mall.mall", "com.j3mall.annotation.log"})
+@EnableAspectJAutoProxy(proxyTargetClass = false)
+@SpringBootApplication(scanBasePackages = {"com.j3mall.mall", "com.j3mall.annotation"})
 @EnableFeignClients(clients = {
-        ProductFeginService.class,
-        OrderFeignService.class
+    ProductFeginService.class,
+    OrderFeignService.class
 })
 public class MallCenterApplication {
     @Value("${j3.platform}")

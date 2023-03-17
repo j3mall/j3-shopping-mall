@@ -32,10 +32,10 @@ public class ProductDecorator {
 
     public List<ProductVO> getProductsByUserId(Integer userId) {
         List<ProductVO> products = productService.getProductsByUserId(userId);
+        log.info("p.s用户{}返回{}个商品", userId, products.size());
         List<ProductVO> productVos = products.stream().peek(productVO -> {
             productVO.setOwnerVO(userDecorator.queryUserById(userId));
         }).collect(Collectors.toList());
-        log.info("p.s用户{}返回{}个商品", userId, productVos.size());
         return productVos;
     }
 
