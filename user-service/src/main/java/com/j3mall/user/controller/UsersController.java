@@ -41,7 +41,7 @@ public class UsersController {
     public JsonResult<UserVO> queryUserById(@ApiParam(value = "用户ID") @PathVariable(KeyConstants.KEY_USERID) Integer userId,
         @ApiParam(value = "指定数据源") @RequestParam(required = false, value = "dsName") String dsName) {
         UserVO userVO = Objects.nonNull(dsName) ?
-            userDecorator.queryByIdByDs(userId, dsName.toLowerCase()) : userDecorator.queryByIdDefault(userId);
+            userDecorator.queryByIdByDs(userId, dsName) : userDecorator.queryByIdDefault(userId);
         log.debug("查询到用户信息 [{}, {}]，数据源为{}", userId, userVO.getName(), dsName);
         return JsonResult.success(userVO);
     }

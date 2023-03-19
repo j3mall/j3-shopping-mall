@@ -2,6 +2,7 @@ package com.j3mall.user.decorator;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.j3mall.framework.datasource.annotation.DataSourceChange;
 import com.j3mall.user.mybatis.domain.User;
 import com.j3mall.user.mybatis.service.UserService;
 import com.j3mall.user.vo.UserVO;
@@ -32,13 +33,15 @@ public class UserDecorator {
 
     // @Cacheable(cacheNames = "micro:user", key="#id", condition = "#id ge 1", unless="#result == null")
     // @DS("master")
+    // @DataSourceChange
     public UserVO queryByIdDefault(int id) {
         UserVO user = queryById(id);
         log.debug("默认数据源查询用户ID {}, {}", id, user.getName());
         return user;
     }
 
-    @DS("#dsName")
+    // @DS("#dsName")
+    @DataSourceChange("#dsName")
     public UserVO queryByIdByDs(int id, String dsName) {
         UserVO user = queryById(id);
         log.debug("{}数据源查询用户ID {}, {}", dsName, id, user.getName());

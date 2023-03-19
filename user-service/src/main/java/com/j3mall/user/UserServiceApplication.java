@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.j3mall.user", "com.j3mall.framework"})
 @MapperScan("com.j3mall.user.mybatis.mapper")
 public class UserServiceApplication {
 
