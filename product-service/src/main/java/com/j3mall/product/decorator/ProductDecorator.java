@@ -1,5 +1,6 @@
 package com.j3mall.product.decorator;
 
+import com.j3mall.j3.framework.constants.DataSourceEnum;
 import com.j3mall.modules.feign.product.vo.ProductVO;
 import com.j3mall.product.mybatis.domain.Product;
 import com.j3mall.product.mybatis.service.ProductService;
@@ -26,7 +27,7 @@ public class ProductDecorator {
     public ProductVO getProductById(Integer id) {
         ProductVO productVO = new ProductVO();
         BeanUtils.copyProperties(productService.getById(id), productVO);
-        productVO.setOwnerVO(userDecorator.queryUserById(productVO.getOwnerId()));
+        productVO.setOwnerVO(userDecorator.queryUserById(productVO.getOwnerId(), DataSourceEnum.MASTER.name()));
         return productVO;
     }
 
@@ -34,7 +35,7 @@ public class ProductDecorator {
         List<ProductVO> products = productService.getProductsByUserId(userId);
         log.info("p.s用户{}返回{}个商品", userId, products.size());
         List<ProductVO> productVos = products.stream().peek(productVO -> {
-            productVO.setOwnerVO(userDecorator.queryUserById(userId));
+            productVO.setOwnerVO(userDecorator.queryUserById(userId, DataSourceEnum.SLAVE1.name()));
         }).collect(Collectors.toList());
         return productVos;
     }

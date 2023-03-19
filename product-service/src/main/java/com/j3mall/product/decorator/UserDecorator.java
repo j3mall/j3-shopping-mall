@@ -14,8 +14,8 @@ public class UserDecorator {
     @Autowired
     private final UserFeignService userFeignService;
 
-    public UserVO queryUserById(Integer userId) {
-        JsonResult<UserVO> jsonResult = userFeignService.queryUserById(userId);
+    public UserVO queryUserById(Integer userId, String dsName) {
+        JsonResult<UserVO> jsonResult = userFeignService.queryUserById(userId, dsName);
         return jsonResult.getBody();
     }
 
