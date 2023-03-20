@@ -32,6 +32,7 @@
 			<artifactId>framework-datasource</artifactId>
 			<version>${j3-framework.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>

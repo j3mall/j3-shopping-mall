@@ -1,5 +1,6 @@
 package com.j3mall.user.controller;
 
+import com.j3mall.j3.framework.constants.DataSourceEnum;
 import com.j3mall.j3.framework.constants.KeyConstants;
 import com.j3mall.j3.framework.utils.JsonResult;
 import com.j3mall.user.decorator.UserDecorator;
@@ -33,7 +34,7 @@ public class UsersController {
     public JsonResult<Boolean> updateUserById(@ApiParam(value = "用户ID") @PathVariable(KeyConstants.KEY_USERID) Integer userId,
         @RequestBody User user) {
         user.setId(userId);
-        return JsonResult.success(userDecorator.updateUserById(user));
+        return JsonResult.success(userDecorator.updateUserById(user, DataSourceEnum.MASTER.getValue()));
     }
 
     @GetMapping("/{userId}")
