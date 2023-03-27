@@ -29,8 +29,9 @@ public class UserDecorator {
         return userService.saveOrUpdate(user);
     }
 
-    /** 未使用 @DS注解，默认为 master数据源 **/
-    @DS("#dsName")
+    /** 未使用注解，默认为 master数据源 **/
+    // @DS("#dsName")
+    @DataSourceChange("#dsName")
     public Boolean updateUserById(User user, String dsName) {
         log.info("-->{}用户信息更新ID{}, {}", dsName, user.getId(), JSON.toJSONString(user));
         return userService.updateById(user);

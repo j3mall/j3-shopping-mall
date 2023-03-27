@@ -5,10 +5,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @EnableDynamicDataSource
+@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = {"com.j3mall.user", "com.j3mall.framework"})
+@SpringBootApplication
 @MapperScan("com.j3mall.user.mybatis.mapper")
 public class UserServiceApplication {
 

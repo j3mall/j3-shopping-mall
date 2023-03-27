@@ -1,5 +1,6 @@
 package com.j3mall.user.decorator;
 
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.j3mall.framework.datasource.annotation.DataSourceChange;
 import com.j3mall.j3.framework.constants.DataSourceEnum;
 import com.j3mall.user.mybatis.domain.User;
@@ -19,6 +20,7 @@ public class TransactionExecutor {
     private UserDecorator userDecorator;
 
     @DataSourceChange("master")
+    // @DSTransactional
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void doInTransaction(Integer[] userIds) {
         User user = new User();
@@ -39,6 +41,7 @@ public class TransactionExecutor {
     }
 
     @DataSourceChange("slave")
+    // @DSTransactional
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void slaveTransaction(Integer[] userIds) {
         User user = new User();
@@ -53,6 +56,7 @@ public class TransactionExecutor {
     }
 
     @DataSourceChange("slave")
+    // @DSTransactional
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void slaveTransaction2(Integer[] userIds) {
         User user = new User();
