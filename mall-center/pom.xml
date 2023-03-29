@@ -36,7 +36,7 @@
 
         <dependency>
             <groupId>com.j3mall</groupId>
-            <artifactId>feign-client</artifactId>
+            <artifactId>myfeign-spring-boot-starter</artifactId>
             <version>${j3-framework.version}</version>
         </dependency>
 
