@@ -47,6 +47,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.j3mall</groupId>
+            <artifactId>myfeign-spring-boot-starter</artifactId>
+            <version>${j3-framework.version}</version>
+        </dependency>
 
     </dependencies>
 

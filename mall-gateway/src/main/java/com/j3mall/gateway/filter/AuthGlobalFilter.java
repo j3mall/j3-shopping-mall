@@ -44,8 +44,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest.Builder reqBuilder = exchange.getRequest().mutate()
                 .header(KeyConstants.KEY_TRACE_ID, traceId);
         String authToken = exchange.getRequest().getHeaders().getFirst(KeyConstants.KEY_J3_TOKEN);
+        boolean loginRequest = exchange.getRequest().getPath().toString().contains("/login");
 
-        if (ObjectUtils.isEmpty(authToken)) {
+        if (loginRequest || ObjectUtils.isEmpty(authToken)) {
             log.warn(getName()+"请求头token为空, {}, {}", exchange.getRequest().getURI(), exchange.getRequest().getQueryParams());
         } else {
             String[] userRange = authToken.split("-");
