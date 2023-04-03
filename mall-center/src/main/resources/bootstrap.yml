@@ -17,6 +17,10 @@ spring:
                 enabled: true
                 server-addr: nacos:8848
                 file-extension: yaml
+                ext-config:
+                    - data-id: application.yml
+                      group: j3mall
+                      refresh: true
 
         sentinel:
             transport:

@@ -16,6 +16,10 @@ spring:
                 server-addr: nacos:8848
                 #namespace: ${spring.application.name}
                 file-extension: yaml
+                ext-config:
+                    - data-id: application.yml
+                      group: j3mall
+                      refresh: true
 
         sentinel:
             transport:
