@@ -13,4 +13,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserMapper userMapper;
 
+    public User queryUserById(Integer id) {
+        return userMapper.queryUserById(id);
+    }
+
 }

@@ -56,7 +56,8 @@ public class UserDecorator {
 
     public UserVO queryById(int id) {
         UserVO userVO = new UserVO();
-        User user = userService.getById(id);
+        User user = userService.queryUserById(id);
+        // User user = userService.getById(id);
         BeanUtils.copyProperties(user, userVO);
         return userVO;
     }

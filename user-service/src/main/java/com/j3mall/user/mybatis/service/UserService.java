@@ -5,4 +5,6 @@ import com.j3mall.user.mybatis.domain.User;
 
 public interface UserService extends IService<User> {
 
+    User queryUserById(Integer id);
+
 }
